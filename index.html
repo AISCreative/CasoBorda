@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Borda Vella | AI Solutions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* === ESTILO AISC === */
+        :root {
+            --gold: #FFD700; --gold-light: #FFEC8B; --orange: #FF8C00;
+            --dark: #1A1A1A; --dark-light: #2D2D2D; --light: #FFFDF5;
+            --gradient-gold: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%);
+            --gradient-dark: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%);
+            --shadow-gold: 0 10px 30px rgba(255, 215, 0, 0.2);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--light);
+            background: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 140, 0, 0.1) 0%, transparent 15%),
+                radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.08) 0%, transparent 12%);
+            z-index: -2; pointer-events: none;
+        }
+        
+        h1, h2, h3, h4 { font-family: 'Playfair Display', serif; font-weight: 700; }
+        
+        .container { width: 90%; max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+        .section { padding: 80px 0; }
+        
+        .section-title {
+            text-align: center; margin-bottom: 50px; position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2.8rem;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text; background-clip: text;
+            color: transparent; display: inline-block; margin-bottom: 15px;
+        }
+        
+        .highlight { color: var(--gold); font-weight: 700; }
+        
+        /* === HEADER CON LOGO === */
+        .agency-header {
+            position: fixed; top: 0; width: 100%; padding: 15px 0;
+            background: rgba(26, 26, 26, 0.95); backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.15); z-index: 1000;
+        }
+        
+        .agency-navbar { display: flex; justify-content: space-between; align-items: center; }
+        
+        .agency-logo-container {
+            display: flex; align-items: center; gap: 12px;
+            text-decoration: none;
+        }
+        
+        .agency-logo-img {
+            height: 60px; width: auto;
+            filter: drop-shadow(0 4px 8px rgba(255, 215, 0, 0.3));
+            transition: all 0.4s ease;
+        }
+        
+        .agency-logo-img:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 6px 12px rgba(255, 215, 0, 0.4));
+        }
+        
+        .logo-text {
+            display: flex; flex-direction: column;
+        }
+        
+        .logo-main {
+            font-size: 1.8rem; font-weight: 800;
+            background: var(--gradient-gold); -webkit-background-clip: text;
+            background-clip: text; color: transparent;
+        }
+        
+        .logo-subtitle {
+            font-size: 0.85rem; color: var(--gold-light);
+            font-weight: 600; letter-spacing: 0.5px;
+        }
+        
+        /* === 1. HERO === */
+        .process-hero {
+            min-height: 100vh; display: flex; align-items: center;
+            padding-top: 120px;
+        }
+        
+        .process-hero-content { max-width: 900px; }
+        
+        .process-hero h1 {
+            font-size: 3rem; margin-bottom: 20px; line-height: 1.1;
+        }
+        
+        .process-hero h1 span {
+            background: var(--gradient-gold);
+            -webkit-background-clip: text; background-clip: text;
+            color: transparent;
+        }
+        
+        .client-briefing {
+            background: rgba(255, 140, 0, 0.08);
+            border-left: 4px solid var(--orange);
+            border-radius: 0 12px 12px 0;
+            padding: 25px; margin: 30px 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .client-briefing h3 {
+            color: var(--orange); font-size: 1.3rem;
+            margin-bottom: 10px; display: flex; align-items: center; gap: 10px;
+        }
+        
+        .briefing-quote {
+            font-style: italic; color: #eee; font-size: 1.2rem;
+            padding: 15px 0; border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+            margin-bottom: 15px; line-height: 1.4;
+        }
+        
+        /* PROCESO DE TRABAJO (debajo del hero como antes) */
+        .work-process {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px; margin: 40px 0;
+        }
+        
+        .process-step {
+            text-align: center; padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px; border: 1px solid rgba(255, 215, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .process-step:hover {
+            border-color: rgba(255, 215, 0, 0.2);
+            transform: translateY(-5px);
+        }
+        
+        .step-icon {
+            font-size: 2.5rem; margin-bottom: 20px;
+            color: var(--gold);
+        }
+        
+        /* === 2. CONTENIDO CREADO === */
+        .content-real {
+            background: rgba(255, 140, 0, 0.05);
+            border-radius: 20px; padding: 40px; margin: 30px 0;
+            border-left: 4px solid var(--orange);
+        }
+        
+        .content-real-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 20px; margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .content-real-grid { grid-template-columns: 1fr; }
+        }
+        
+        .content-real-item {
+            height: 250px; background: #1a1a1a;
+            border-radius: 12px; overflow: hidden;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        
+        .content-real-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: var(--shadow-gold);
+        }
+        
+        .content-real-item img {
+            width: 100%; height: 100%;
+            object-fit: cover; transition: transform 0.5s ease;
+        }
+        
+        .content-real-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .content-label {
+            position: absolute; bottom: 0; left: 0;
+            width: 100%; background: rgba(0, 0, 0, 0.7);
+            color: var(--gold); padding: 10px;
+            text-align: center; font-weight: 600;
+            backdrop-filter: blur(5px);
+        }
+        
+        /* === 3. RESULTADO (CON EL BOTÓN DE ESTRELLAS) === */
+        .result-section {
+            text-align: center; padding: 60px 0;
+            margin: 30px 0;
+        }
+        
+        .star-button {
+            background: var(--gradient-gold); color: var(--dark);
+            padding: 18px 50px; border-radius: 30px;
+            font-weight: 800; font-size: 1.5rem;
+            display: inline-flex; align-items: center; gap: 20px;
+            margin: 20px 0 40px 0;
+            box-shadow: var(--shadow-gold);
+            position: relative;
+            overflow: visible;
+            border: none;
+            cursor: default;
+        }
+        
+        .star-button .star-left {
+            position: absolute;
+            left: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            z-index: 2;
+        }
+        
+        .star-button .star-right {
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            z-index: 2;
+        }
+        
+        .result-explanation {
+            max-width: 800px; margin: 30px auto 0;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 25px; border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+        
+        /* === 4. WEB REAL (MÁS PEQUEÑA) === */
+        .web-real-container {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px; padding: 30px; margin: 30px 0;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        
+        .iframe-wrapper {
+            position: relative; width: 100%; 
+            max-width: 1000px; /* Más pequeño que antes */
+            height: 500px; /* Más pequeño que antes (era 650px) */
+            background: #000; border-radius: 10px; overflow: hidden;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            margin: 0 auto; /* Centrado */
+        }
+        
+        .web-iframe {
+            width: 100%; height: 100%; border: none;
+        }
+        
+        .web-badge {
+            position: absolute; top: 20px; right: 20px;
+            background: var(--gradient-gold); color: var(--dark);
+            padding: 10px 20px; border-radius: 30px;
+            font-weight: 700; font-size: 0.9rem;
+            display: flex; align-items: center; gap: 8px;
+            z-index: 10; text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .web-badge:hover {
+            transform: scale(1.05);
+        }
+        
+        .web-note {
+            max-width: 800px; margin: 25px auto 0;
+            color: #bbb; font-size: 0.95rem;
+            padding: 15px; background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+        }
+        
+        /* === FOOTER === */
+        .project-footer {
+            text-align: center; padding: 60px 0 30px;
+            border-top: 1px solid rgba(255, 215, 0, 0.1);
+        }
+        
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .section { padding: 60px 0; }
+            .section-title h2 { font-size: 2.2rem; }
+            .process-hero { padding-top: 100px; min-height: auto; padding-bottom: 40px; }
+            .process-hero h1 { font-size: 2.2rem; }
+            .iframe-wrapper { 
+                height: 400px; /* Ajuste responsive */
+                max-width: 95%;
+            }
+            .agency-logo-img { height: 50px; }
+            .logo-main { font-size: 1.5rem; }
+            .star-button { 
+                font-size: 1.2rem; 
+                padding: 15px 35px;
+            }
+            .star-button .star-left,
+            .star-button .star-right {
+                font-size: 1.5rem;
+                left: -20px;
+                right: -20px;
+            }
+            .work-process { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 480px) {
+            .process-hero h1 { font-size: 1.8rem; }
+            .iframe-wrapper { height: 300px; }
+            .web-badge { top: 10px; right: 10px; padding: 8px 15px; font-size: 0.8rem; }
+            .star-button { 
+                font-size: 1.1rem; 
+                padding: 12px 25px;
+                gap: 10px;
+            }
+            .star-button .star-left,
+            .star-button .star-right {
+                font-size: 1.2rem;
+                left: -15px;
+                right: -15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header con Logo -->
+    <header class="agency-header">
+        <div class="container">
+            <nav class="agency-navbar">
+                <a href="#" class="agency-logo-container">
+                    <img src="images/logo.png" alt="AI Solutions" class="agency-logo-img">
+                    <div class="logo-text">
+                        <div class="logo-main">AI Solutions</div>
+                        <div class="logo-subtitle">Creative Agency</div>
+                    </div>
+                </a>
+                <div style="color: var(--gold); font-weight: 600; font-size: 0.9rem;">
+                    PROYECTO REAL
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- === 1. HERO === -->
+    <section class="section process-hero">
+        <div class="container">
+            <div class="process-hero-content">
+                <h1>Borda Vella: <span>Lo que el cliente pidió, punto.</span></h1>
+                <p style="font-size: 1.3rem; color: #ddd; margin-bottom: 25px;">
+                    Sin estrategias complejas. Sin promesas vacías. Solo plasmar <span class="highlight">exactamente</span> lo que el dueño quería.
+                </p>
+                
+                <div class="client-briefing">
+                    <h3><i class="fas fa-bullseye"></i> Palabras textuales del cliente</h3>
+                    <div class="briefing-quote">
+                        "Una web dinámica y actualizada pero tradicional. Con el toque elegante sin pasarnos de modernos."
+                    </div>
+                    <p>Ese fue el briefing. <strong>Punto de partida, punto de llegada.</strong></p>
+                </div>
+                
+                <!-- PROCESO DE TRABAJO -->
+                <div style="margin-top: 40px;">
+                    <h3 style="color: var(--gold); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-bolt"></i> Nuestro proceso real
+                    </h3>
+                    <div class="work-process">
+                        <div class="process-step">
+                            <div class="step-icon"><i class="fas fa-comments"></i></div>
+                            <h4 style="color: var(--gold); margin-bottom: 10px;">Contacto directo</h4>
+                            <p style="color: #bbb; font-size: 0.9rem;">Hablamos directamente con el dueño. Sin intermediarios, sin interpretaciones.</p>
+                        </div>
+                        
+                        <div class="process-step">
+                            <div class="step-icon"><i class="fas fa-rocket"></i></div>
+                            <h4 style="color: var(--gold); margin-bottom: 10px;">Desarrollo rápido</h4>
+                            <p style="color: #bbb; font-size: 0.9rem;">Web funcional en tiempo récord. El cliente ve avances reales, no solo presentaciones.</p>
+                        </div>
+                        
+                        <div class="process-step">
+                            <div class="step-icon"><i class="fas fa-sync-alt"></i></div>
+                            <h4 style="color: var(--gold); margin-bottom: 10px;">Cambios en vivo</h4>
+                            <p style="color: #bbb; font-size: 0.9rem;">Ajustamos sobre la marcha según las necesidades que iban surgiendo.</p>
+                        </div>
+                        
+                        <div class="process-step">
+                            <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+                            <h4 style="color: var(--gold); margin-bottom: 10px;">Entrega 100%</h4>
+                            <p style="color: #bbb; font-size: 0.9rem;">Web lista + contenido para la web + contenido para redes. Todo funcional.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- === 2. CONTENIDO CREADO === -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Contenido Real Creado</h2>
+                <p>No stock, no genérico. Contenido hecho específicamente para Borda Vella</p>
+            </div>
+            
+            <div class="content-real">
+                <div class="content-real-grid">
+                    <!-- Imagen CC1 -->
+                    <div class="content-real-item">
+                        <img src="images/cc1.jpg" alt="Contenido creado 1 - Borda Vella">
+                        <div class="content-label">Fotografía profesional de plato estrella</div>
+                    </div>
+                    
+                    <!-- Imagen CC2 -->
+                    <div class="content-real-item">
+                        <img src="images/cc2.jpg" alt="Contenido creado 2 - Borda Vella">
+                        <div class="content-label">Ambiente y decoración del restaurante</div>
+                    </div>
+                    
+                    <!-- Imagen CC3 -->
+                    <div class="content-real-item">
+                        <img src="images/cc3.jpg" alt="Contenido creado 3 - Borda Vella">
+                        <div class="content-label">Detalles y productos locales</div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <p style="color: #ccc; font-style: italic; max-width: 700px; margin: 0 auto;">
+                        <i class="fas fa-quote-left" style="color: var(--orange); margin-right: 10px;"></i>
+                        Creamos el contenido. El cliente decide cuándo y cómo usarlo. Así de simple.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- === 3. RESULTADO (CON BOTÓN DE ESTRELLAS) === -->
+    <section class="section result-section">
+        <div class="container">
+            <h2 style="color: var(--gold); font-size: 2.2rem; margin-bottom: 15px;">
+                <i class="fas fa-crown"></i> El Resultado
+            </h2>
+            
+            <!-- BOTÓN CON ESTRELLAS MITAD FUERA -->
+            <div class="star-button">
+                <div class="star-left">⭐</div>
+                WEB 100% PERSONALIZADA
+                <div class="star-right">⭐</div>
+            </div>
+            
+            <div class="result-explanation">
+                <p style="color: #ddd; font-size: 1.1rem; margin-bottom: 15px;">
+                    <strong style="color: var(--gold); font-size: 1.2rem;">Trabajamos con diferentes opciones:</strong> plantilla, semi-personalizada, 100% personalizada.
+                </p>
+                <p style="color: #ddd; font-size: 1.1rem; margin-bottom: 20px;">
+                    <strong style="color: var(--gold); font-size: 1.2rem;">Borda Vella eligió la opción premium porque:</strong>
+                </p>
+                <ul style="color: #ddd; font-size: 1.1rem; text-align: left; max-width: 600px; margin: 20px auto; padding-left: 20px;">
+                    <li style="margin-bottom: 12px; padding-left: 5px; border-left: 3px solid var(--gold);">
+                        Necesitaba reflejar su <strong style="color: var(--gold-light);">historia única desde 1972</strong>
+                    </li>
+                    <li style="margin-bottom: 12px; padding-left: 5px; border-left: 3px solid var(--orange);">
+                        Requería <strong style="color: var(--gold-light);">"elegancia medida"</strong> sin pasarse de moderno
+                    </li>
+                    <li style="padding-left: 5px; border-left: 3px solid var(--gold);">
+                        Quería <strong style="color: var(--gold-light);">cambios en directo</strong> durante el desarrollo
+                    </li>
+                </ul>
+                <div style="margin-top: 25px; padding: 15px; background: rgba(255, 215, 0, 0.05); border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.1);">
+                    <p style="color: #eee; font-size: 1.1rem; font-weight: 600;">
+                        <i class="fas fa-check-circle" style="color: var(--gold); margin-right: 10px;"></i>
+                        Trabajo con <strong style="color: var(--gold);">contacto directo</strong> con el dueño, 
+                        <strong style="color: var(--gold);">cambios en tiempo real</strong> según necesidades, y entrega de 
+                        <strong style="color: var(--gold);">contenido específico</strong> para web y redes.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- === 4. WEB REAL (MÁS PEQUEÑA) === -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>La Web Real Entregada</h2>
+                <p>El resultado tangible del trabajo 100% personalizado</p>
+            </div>
+            
+            <div class="web-real-container">
+                <div class="iframe-wrapper">
+                    <iframe 
+                        src="https://www.bordavella.com" 
+                        class="web-iframe"
+                        title="Web real de Borda Vella"
+                        allowfullscreen>
+                    </iframe>
+                    <a href="https://www.bordavella.com" target="_blank" class="web-badge">
+                        <i class="fas fa-external-link-alt"></i> Ver web real
+                    </a>
+                </div>
+                
+                <div class="web-note">
+                    <p>
+                        <i class="fas fa-info-circle" style="color: var(--gold); margin-right: 8px;"></i>
+                        Web 100% personalizada desarrollada con contacto directo con el cliente, cambios en tiempo real según necesidades, y entrega completa de contenido específico.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Final -->
+    <section class="section project-footer">
+        <div class="container">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 25px;">
+                <img src="images/logo.png" alt="AI Solutions Creative Agency" style="height: 60px; filter: drop-shadow(0 4px 8px rgba(255,215,0,0.3));">
+                <div>
+                    <h3 style="color: var(--gold); font-size: 1.8rem;">AI Solutions Creative Agency</h3>
+                    <p style="color: #aaa; font-size: 0.9rem;">Webs 100% personalizadas • Desarrollo rápido • Contenido real</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 40px;">
+                <a href="https://www.bordavella.com" target="_blank" class="web-badge" style="font-size: 1.1rem; padding: 15px 30px;">
+                    <i class="fas fa-eye" style="margin-right: 10px;"></i>
+                    Ver el resultado: bordavella.com
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Logo fallback
+            const logoImg = document.querySelector('.agency-logo-img');
+            if(logoImg) {
+                logoImg.onerror = function() {
+                    this.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='80' viewBox='0 0 200 80'%3E%3Cdefs%3E%3ClinearGradient id='goldGradient' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23FFD700;stop-opacity:1'/%3E%3Cstop offset='100%25' style='stop-color:%23FF8C00;stop-opacity:1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ctext x='100' y='45' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' font-weight='bold' fill='url(%23goldGradient)'%3EAISC%3C/text%3E%3C/svg%3E";
+                };
+            }
+            
+            // Fallback para imágenes de contenido
+            const contentImgs = document.querySelectorAll('.content-real-item img');
+            contentImgs.forEach((img, index) => {
+                img.onerror = function() {
+                    const colors = ['#2a2a2a', '#1a1a1a', '#333'];
+                    const labels = [
+                        'Fotografía profesional de plato estrella',
+                        'Ambiente y decoración del restaurante',
+                        'Detalles y productos locales'
+                    ];
+                    
+                    this.parentElement.innerHTML = `
+                        <div style="width:100%; height:100%; background: linear-gradient(45deg, ${colors[index] || '#2a2a2a'}, #1a1a1a); 
+                             display:flex; flex-direction:column; align-items:center; justify-content:center; color: var(--gold-light);">
+                            <i class="fas fa-camera" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                            <span>${labels[index] || 'Contenido creado ' + (index + 1)}</span>
+                        </div>
+                        <div class="content-label">${labels[index] || 'Contenido creado ' + (index + 1)}</div>
+                    `;
+                };
+            });
+            
+            // Animación para las tarjetas
+            const contentItems = document.querySelectorAll('.content-real-item, .process-step');
+            contentItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, 200 + (index * 100));
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(15px)';
+                item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+            
+            // Efecto de parpadeo suave para las estrellas
+            const stars = document.querySelectorAll('.star-left, .star-right');
+            setInterval(() => {
+                stars.forEach(star => {
+                    star.style.opacity = Math.random() * 0.3 + 0.7;
+                });
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
