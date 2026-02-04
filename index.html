@@ -215,17 +215,18 @@
             margin: 20px 0 40px 0;
             box-shadow: var(--shadow-gold);
             position: relative;
-            overflow: visible;
+            overflow: hidden;
             border: none;
             cursor: default;
+            white-space: nowrap;
         }
         
         .star-button .star-left {
             position: absolute;
-            left: -25px;
+            left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: var(--gold);
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
             z-index: 2;
@@ -233,13 +234,17 @@
         
         .star-button .star-right {
             position: absolute;
-            right: -25px;
+            right: 15px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: var(--gold);
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
             z-index: 2;
+        }
+        
+        .star-button .button-text {
+            padding: 0 40px;
         }
         
         .result-explanation {
@@ -249,7 +254,7 @@
             border: 1px solid rgba(255, 215, 0, 0.1);
         }
         
-        /* === 4. WEB REAL (MÁS PEQUEÑA) === */
+        /* === 4. WEB REAL (REEMPLAZADO IFRAME POR IMAGEN) === */
         .web-real-container {
             background: rgba(255, 255, 255, 0.03);
             border-radius: 20px; padding: 30px; margin: 30px 0;
@@ -258,17 +263,46 @@
             text-align: center;
         }
         
-        .iframe-wrapper {
+        .web-preview {
             position: relative; width: 100%; 
-            max-width: 1000px; /* Más pequeño que antes */
-            height: 500px; /* Más pequeño que antes (era 650px) */
+            max-width: 1000px;
+            height: 500px;
             background: #000; border-radius: 10px; overflow: hidden;
             border: 1px solid rgba(255, 215, 0, 0.2);
-            margin: 0 auto; /* Centrado */
+            margin: 0 auto;
         }
         
-        .web-iframe {
-            width: 100%; height: 100%; border: none;
+        .web-preview-image {
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .web-preview:hover .web-preview-image {
+            transform: scale(1.02);
+        }
+        
+        .web-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .web-preview:hover .web-overlay {
+            opacity: 1;
         }
         
         .web-badge {
@@ -356,8 +390,8 @@
                 gap: 15px;
             }
             
-            .iframe-wrapper {
-                height: 450px;
+            .web-preview {
+                height: 400px;
                 max-width: 100%;
                 margin: 0 auto;
             }
@@ -373,6 +407,27 @@
             .logo-subtitle {
                 font-size: 0.75rem;
             }
+            
+            /* Botón estrella en móvil */
+            .star-button {
+                font-size: 1.2rem;
+                padding: 15px 35px;
+            }
+            
+            .star-button .button-text {
+                padding: 0 30px;
+                font-size: 1.1rem;
+            }
+            
+            .star-button .star-left {
+                left: 10px;
+                font-size: 1.5rem;
+            }
+            
+            .star-button .star-right {
+                right: 10px;
+                font-size: 1.5rem;
+            }
         }
         
         @media (max-width: 480px) {
@@ -380,8 +435,8 @@
                 font-size: 1.8rem;
             }
             
-            .iframe-wrapper {
-                height: 350px;
+            .web-preview {
+                height: 300px;
             }
             
             .web-badge {
@@ -396,11 +451,16 @@
                 padding: 12px 25px;
             }
             
+            .star-button .button-text {
+                padding: 0 25px;
+                font-size: 1rem;
+            }
+            
             .star-button .star-left,
             .star-button .star-right {
                 font-size: 1.2rem;
-                left: -15px;
-                right: -15px;
+                left: 8px;
+                right: 8px;
             }
             
             /* Ajustes para mantener elementos en línea */
@@ -437,16 +497,6 @@
             .agency-navbar > div {
                 white-space: nowrap;
             }
-            
-            /* Ajustar el botón estrella */
-            .star-button {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 90%;
-                margin-left: auto;
-                margin-right: auto;
-            }
         }
         
         /* Evitar que el contenido sea demasiado ancho en móvil */
@@ -457,12 +507,6 @@
             .web-real-container {
                 max-width: 100%;
                 overflow-x: hidden;
-            }
-            
-            /* Mantener el iframe proporcional pero visible */
-            .iframe-wrapper {
-                transform-origin: center;
-                transform: scale(0.95);
             }
         }
         
@@ -595,10 +639,10 @@
                 <i class="fas fa-crown"></i> El Resultado
             </h2>
             
-            <!-- BOTÓN CON ESTRELLAS MITAD FUERA -->
+            <!-- BOTÓN CON ESTRELLAS AJUSTADO -->
             <div class="star-button">
                 <div class="star-left">⭐</div>
-                WEB 100% PERSONALIZADA
+                <span class="button-text">WEB 100% PERSONALIZADA</span>
                 <div class="star-right">⭐</div>
             </div>
             
@@ -632,7 +676,7 @@
         </div>
     </section>
 
-    <!-- === 4. WEB REAL (MÁS PEQUEÑA) === -->
+    <!-- === 4. WEB REAL (REEMPLAZADO IFRAME POR IMAGEN) === -->
     <section class="section">
         <div class="container">
             <div class="section-title">
@@ -641,13 +685,19 @@
             </div>
             
             <div class="web-real-container">
-                <div class="iframe-wrapper">
-                    <iframe 
-                        src="https://www.bordavella.com" 
-                        class="web-iframe"
-                        title="Web real de Borda Vella"
-                        allowfullscreen>
-                    </iframe>
+                <div class="web-preview">
+                    <!-- Imagen de la web real -->
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                         alt="Captura de pantalla de la web de Borda Vella" 
+                         class="web-preview-image">
+                    
+                    <div class="web-overlay">
+                        <h3 style="color: var(--gold); font-size: 2rem; margin-bottom: 15px;">BordaVella.com</h3>
+                        <p style="color: white; font-size: 1.2rem; max-width: 600px;">
+                            Web 100% personalizada desarrollada con las especificaciones exactas del cliente
+                        </p>
+                    </div>
+                    
                     <a href="https://www.bordavella.com" target="_blank" class="web-badge">
                         <i class="fas fa-external-link-alt"></i> Ver web real
                     </a>
@@ -714,6 +764,14 @@
                     `;
                 };
             });
+            
+            // Fallback para imagen de la web
+            const webImage = document.querySelector('.web-preview-image');
+            if(webImage) {
+                webImage.onerror = function() {
+                    this.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='600' viewBox='0 0 1200 600'%3E%3Cdefs%3E%3ClinearGradient id='bgGradient' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231A1A1A;stop-opacity:1'/%3E%3Cstop offset='100%25' style='stop-color:%232D2D2D;stop-opacity:1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='600' fill='url(%23bgGradient)'/%3E%3Ctext x='600' y='280' text-anchor='middle' font-family='Arial, sans-serif' font-size='48' font-weight='bold' fill='%23FFD700'%3EBorda Vella%3C/text%3E%3Ctext x='600' y='340' text-anchor='middle' font-family='Arial, sans-serif' font-size='24' fill='%23FFFFFF'%3EWeb 100%25 Personalizada%3C/text%3E%3C/svg%3E";
+                };
+            }
             
             // Animación para las tarjetas
             const contentItems = document.querySelectorAll('.content-real-item, .process-step');
